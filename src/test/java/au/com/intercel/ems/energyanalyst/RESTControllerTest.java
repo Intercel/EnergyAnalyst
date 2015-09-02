@@ -3,7 +3,9 @@ package au.com.intercel.ems.energyanalyst;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.net.URL;
+import java.util.Scanner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class HelloControllerIT {
+public class RESTControllerTest {
 
     @Value("${local.server.port}")
     private int port;
@@ -37,7 +39,9 @@ public class HelloControllerIT {
 
 	@Test
 	public void getHello() throws Exception {
+		System.out.println(System.getProperty("user.dir"));
 		ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
-		assertThat(response.getBody(), equalTo("Greetings from Spring Boot!"));
+		Scanner scanner = new Scanner( new File("src" + System.getProperty("file.separator") + "main" + System.getProperty("file.separator") + "resources" + System.getProperty("file.separator") + "static" + System.getProperty("file.separator") + "index.html"));	
+		assertThat(response.getBody(), equalTo(scanner.useDelimiter("\\A").next()));
 	}
 }

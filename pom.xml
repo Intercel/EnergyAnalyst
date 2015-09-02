@@ -3,7 +3,12 @@
   <groupId>au.com.intercel.ems</groupId>
   <artifactId>energyanalyst</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>energyanalyst1</name>
+  <name>energyanalyst</name>
+  
+  <organization>
+        <name>Intercel</name>
+        <url>http://intercel.com.au</url>
+  </organization>
   
     <!-- Uncomment this line below to generate deployable WAR file -->
 	<!--<packaging>war</packaging> -->
@@ -54,6 +59,34 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+        <!-- REST API Document -->
+        <!--
+        <dependency>
+	        <groupId>com.mangofactory</groupId>
+	        <artifactId>swagger-springmvc</artifactId>
+	        <version>1.0.2</version>
+        </dependency>
+         -->
+        
+        <!-- Embedded HSQLDB database -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- MySQL connector -->
+        <!--
+        <dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		-->
       
 		<!-- Uncomment this section below to generate deployable WAR file -->
 		<!--
@@ -63,7 +96,12 @@
 			<scope>provided</scope>
 		</dependency>
 		-->
-		
+
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>2.10.4</version>
+		</dependency>
     </dependencies>
     
     <build>
@@ -71,6 +109,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.springframework</groupId>
+						<artifactId>springloaded</artifactId>
+						<version>${spring-loaded.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
