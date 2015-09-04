@@ -19,6 +19,16 @@ public interface EnergyAnalyticService {
 	 * @return the customer data
 	 */
 	Customer getCustomerData(String userId);
+	
+	/**
+	 * Gets the customer data.
+	 *
+	 * @param userId the user id
+	 * @param startDate the start date of the billing cycle
+	 * @param endDate the end date of the billing cycle
+	 * @return the customer data with energy usage prediction
+	 */
+	Customer getCustomerData(String userId, String startDate, String endDate);
 
 	/**
 	 * Import energy data.
@@ -35,5 +45,4 @@ public interface EnergyAnalyticService {
 	 * @return the energy data
 	 */
 	Collection<DailyRecord> getEnergyData(String UserId);
-
 }

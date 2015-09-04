@@ -1,6 +1,7 @@
 package au.com.intercel.ems.energyanalyst.domain;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,4 +17,6 @@ public interface DailyRecordRepository extends CrudRepository<DailyRecord, Long>
 	 * @return the collection of daily record
 	 */
 	Collection<DailyRecord> findByUid(String uId);
+	
+	Collection<DailyRecord> findByDateBetweenAndUidIs(Date start, Date end, String Uid);
 }

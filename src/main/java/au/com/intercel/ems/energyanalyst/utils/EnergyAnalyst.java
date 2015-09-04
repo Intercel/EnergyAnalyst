@@ -1,19 +1,28 @@
 package au.com.intercel.ems.energyanalyst.utils;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import au.com.intercel.ems.energyanalyst.domain.Customer;
 import au.com.intercel.ems.energyanalyst.domain.DailyRecord;
+import au.com.intercel.ems.energyanalyst.domain.DailyRecordRepository;
 
 /**
  * The Class EnergyAnalyst.
@@ -122,6 +131,81 @@ public class EnergyAnalyst {
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 		return sortedMap;
+	}
+
+	/**
+	 * Gets the energy usage prediction.
+	 * 
+	 * Predicts the energy usage of specified user for specified dates
+	 *
+	 * @param customer the customer
+	 * @param dailyRecordRepository the daily record repository
+	 * @param startDate the start date specified
+	 * @param endDate the end date specified
+	 * @return the energy usage prediction in the unit of kWh
+	 */
+	public static double getEnergyUsagePrediction(Customer customer, DailyRecordRepository dailyRecordRepository, String startDate, String endDate) {
+		double energyUsagePrediction = Double.NaN;
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date start = dateFormat.parse(startDate);
+			Date end = dateFormat.parse(endDate);
+			
+			if (start.compareTo(end)<0){
+				System.out.println("start is older");
+				
+				Map<Date, Double> historicalEnergyUsage = getHistoricalEnergyUsage(customer, dailyRecordRepository, start, end);
+				
+				int numberOfRecords = historicalEnergyUsage.size();
+				double historicalEnergyUsageSummation = 0;
+				
+				for(double record : historicalEnergyUsage.values()){
+					historicalEnergyUsageSummation += record;
+				}
+				
+				int totalNumberOfDays = Days.daysBetween(new DateTime(start), new DateTime(end)).getDays() + 1;
+				
+				energyUsagePrediction = historicalEnergyUsageSummation + ( customer.getAverageDailyConsumption() * (totalNumberOfDays - numberOfRecords ) );
+				
+			}else if(start.compareTo(end)>0){
+				System.out.println("end is older");
+			}
+			else if (start.compareTo(end)==0){
+				energyUsagePrediction = customer.getAverageDailyConsumption();
+			}
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		return energyUsagePrediction;
+	}
+
+	/**
+	 * Gets the historical energy usage records.
+	 * 
+	 * Read the database and returns all recored energy usage between the specified dates.
+	 *
+	 * @param customer the customer
+	 * @param dailyRecordRepository the daily record repository
+	 * @param start the start date specified
+	 * @param end the end date specified
+	 * @return the historical energy usage records
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	private static Map<Date, Double> getHistoricalEnergyUsage(Customer customer, DailyRecordRepository dailyRecordRepository, Date start, Date end) throws JsonParseException, JsonMappingException, IOException {
+		Map<Date, Double> historicalEnergyUsage = new HashMap<Date, Double>();
+		
+		Collection<DailyRecord> historicalDailyRecords = dailyRecordRepository.findByDateBetweenAndUidIs(start, end, customer.getId());
+		
+		for(DailyRecord record : historicalDailyRecords){
+			
+			historicalEnergyUsage.put(record.getDate(), record.getTotalConsumedEnergy());
+		}
+		
+		return historicalEnergyUsage;
 	}
 
 }

@@ -13,6 +13,7 @@ import au.com.intercel.ems.energyanalyst.domain.CustomerRepository;
 import au.com.intercel.ems.energyanalyst.domain.DailyRecord;
 import au.com.intercel.ems.energyanalyst.domain.DailyRecordRepository;
 import au.com.intercel.ems.energyanalyst.utils.CSVEnergyFileProcessor;
+import au.com.intercel.ems.energyanalyst.utils.EnergyAnalyst;
 
 
 /**
@@ -48,6 +49,20 @@ public class EnergyAnalyticServiceImpl implements EnergyAnalyticService {
 	@Override
 	public Customer getCustomerData(String userId) {
 		return customerRepository.findById(userId);
+	}
+	
+	/* (non-Javadoc)
+	 * @see au.com.intercel.ems.energyanalyst.service.EnergyAnalyticService#getCustomerData(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Customer getCustomerData(String userId, String startDate, String endDate) {		
+		Customer customer = customerRepository.findById(userId);
+		
+		double energyUsagePrediction = EnergyAnalyst.getEnergyUsagePrediction(customer, dailyRecordRepository, startDate, endDate);
+		
+		customer.setEnergyUsagePrediction(energyUsagePrediction);
+		
+		return customer;
 	}
 
 	/* (non-Javadoc)

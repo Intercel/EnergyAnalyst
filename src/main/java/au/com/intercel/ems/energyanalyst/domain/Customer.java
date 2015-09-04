@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 /**
  * The Class Customer.
@@ -61,6 +62,15 @@ public class Customer implements Serializable{
 	 */
 	private String type;
 	
+	/** 
+	 * The predicted energy usage. 
+	 * 
+	 * It is the predicted energy on the given start date and finish date in the unit of kWh.
+	 * This variable is not persisted in database.
+	 */
+	@Transient
+	private double energyUsagePrediction = Double.NaN;
+
 	/**
 	 * Instantiates a new customer.
 	 * 
@@ -207,5 +217,26 @@ public class Customer implements Serializable{
 	 */
 	public String getId() {
 		return id;
+	}
+	
+	/**
+	 * Gets the energy usage prediction.
+	 * 
+	 * It predicts energy usage on the given start date and finish date in the unit of kWh.
+	 *
+	 * @return the energy usage prediction in the unit of kWh
+	 */
+	public double getEnergyUsagePrediction() {
+		return energyUsagePrediction;
+	}
+	
+
+	/**
+	 * Sets the energy usage prediction.
+	 *
+	 * @param energyUsagePrediction the new energy usage prediction
+	 */
+	public void setEnergyUsagePrediction(double energyUsagePrediction) {
+		this.energyUsagePrediction = energyUsagePrediction;
 	}
 }

@@ -2226,11 +2226,11 @@ public class DailyRecord implements Serializable{
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the user id.
 	 *
-	 * @return the id
+	 * @return the user id
 	 */
-	public String getId() {
+	public String getUid() {
 		return uid;
 	}
 	

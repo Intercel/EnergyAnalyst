@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class RESTController.
  */
@@ -54,16 +56,25 @@ public class RESTController {
 		return this.analyticService.importEnergyData(file);
     }
     
+
 	/**
 	 * Gets the customer data.
 	 *
 	 * @param UserId the user id
-	 * @return the customer data
+	 * @param startDate optional, the start date of the billing cycle
+	 * @param endDate optional, the end date of the billing cycle
+	 * @return the customer data with energy usage prediction
 	 */
-	@RequestMapping("/api/customer/{UserId}")
+	@RequestMapping(value="/api/customer/{UserId}", method=RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public Customer getCustomerData(@PathVariable("UserId") String UserId) {
-		return this.analyticService.getCustomerData(UserId);
-	}
+	public Customer getCustomerData(@PathVariable("UserId") String UserId,
+			@RequestParam(value = "start", required = false) String startDate, 
+			@RequestParam(value = "end", required = false) String endDate) {
+		
+		if((startDate ==null) && (endDate == null))
+			return this.analyticService.getCustomerData(UserId);
+		else
+			return this.analyticService.getCustomerData(UserId, startDate, endDate);
+	}	
 }
