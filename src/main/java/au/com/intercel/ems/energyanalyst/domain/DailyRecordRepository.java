@@ -18,5 +18,9 @@ public interface DailyRecordRepository extends CrudRepository<DailyRecord, Long>
 	 */
 	Collection<DailyRecord> findByUid(String uId);
 	
+	Collection<DailyRecord> findByUidOrderByDateDesc(String uId);
+	
+	Collection<DailyRecord> findFirst7ByUidOrderByDateDesc(String uId);
+	
 	Collection<DailyRecord> findByDateBetweenAndUidIs(Date start, Date end, String Uid);
 }

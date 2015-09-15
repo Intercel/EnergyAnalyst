@@ -98,8 +98,9 @@ public class EnergyAnalyticServiceImpl implements EnergyAnalyticService {
 	 * @see au.com.intercel.ems.energyanalyst.service.EnergyAnalyticService#getEnergyData(java.lang.String)
 	 */
 	@Override
-	public Collection<DailyRecord> getEnergyData(String userId) {		
-		return dailyRecordRepository.findByUid(userId);
+	public Collection<DailyRecord> getEnergyData(String userId) {
+		
+		return dailyRecordRepository.findFirst7ByUidOrderByDateDesc(userId);
 	}
 
 	/* (non-Javadoc)
