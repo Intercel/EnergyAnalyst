@@ -2,10 +2,12 @@ package au.com.intercel.ems.energyanalyst.service;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Timer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import au.com.intercel.ems.energyanalyst.domain.Customer;
@@ -30,6 +32,8 @@ public class EnergyAnalyticServiceImpl implements EnergyAnalyticService {
 	
 	/** The daily record repository. */
 	DailyRecordRepository dailyRecordRepository;
+	
+	private Timer timer = new Timer();
 	
 	/**
 	 * Instantiates a new energy analytic service interface.
@@ -69,7 +73,7 @@ public class EnergyAnalyticServiceImpl implements EnergyAnalyticService {
 	 * @see au.com.intercel.ems.energyanalyst.service.EnergyAnalyticService#importEnergyData(org.springframework.web.multipart.MultipartFile)
 	 */
 	@Override
-	public String importEnergyData(MultipartFile file) {
+	public String importEnergyDataBlocking(MultipartFile file) {
 		String status = "";
 		try{
 			// save file
@@ -96,5 +100,26 @@ public class EnergyAnalyticServiceImpl implements EnergyAnalyticService {
 	@Override
 	public Collection<DailyRecord> getEnergyData(String userId) {		
 		return dailyRecordRepository.findByUid(userId);
+	}
+
+	/* (non-Javadoc)
+	 * @see au.com.intercel.ems.energyanalyst.service.EnergyAnalyticService#importEnergyDataNonBlocking(org.springframework.web.multipart.MultipartFile)
+	 */
+	@Override
+	public String importEnergyDataNonBlocking(MultipartFile file) {
+		String status = "";
+		try{
+			// create the task
+			EnergyAnalyticCSVFileProcessor task = new EnergyAnalyticCSVFileProcessor(file, customerRepository, dailyRecordRepository);
+			
+			// start the scheduled task now
+			timer.schedule(task, 0);
+			
+			status = file.getOriginalFilename() + "uploaded successfully.";
+		} catch (Exception ex){
+			ex.printStackTrace();
+			status = ex.toString();
+		}
+		return status;
 	}
 }

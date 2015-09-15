@@ -31,12 +31,12 @@ public interface EnergyAnalyticService {
 	Customer getCustomerData(String userId, String startDate, String endDate);
 
 	/**
-	 * Import energy data.
+	 * Import energy data with blocking operation.
 	 *
 	 * @param file the file
 	 * @return the string
 	 */
-	String importEnergyData(MultipartFile file);
+	String importEnergyDataBlocking(MultipartFile file);
 
 	/**
 	 * Gets the energy data.
@@ -45,4 +45,14 @@ public interface EnergyAnalyticService {
 	 * @return the energy data
 	 */
 	Collection<DailyRecord> getEnergyData(String UserId);
+
+	
+	
+	/**
+	 * Import energy data with non blocking operation.
+	 *
+	 * @param file the file
+	 * @return the string
+	 */
+	String importEnergyDataNonBlocking(MultipartFile file);
 }

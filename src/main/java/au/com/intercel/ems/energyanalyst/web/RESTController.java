@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RESTController.
  */
@@ -41,19 +40,35 @@ public class RESTController {
     }
     
     /**
-     * Import energy data.
+     * Import energy data with blocking operation.
      *
      * @param file the file
      * @return the string
      */
     @RequestMapping(value="/api/energy", method=RequestMethod.POST)
     @ResponseBody
-    public String importEnergyData(final MultipartFile file){
+    public String importEnergyDataBlocking(final MultipartFile file){
+    	
+		return this.analyticService.importEnergyDataBlocking(file);
+    }
+    
+    
+    /**
+     * Import energy data with non blocking operation.
+     *
+     * @param file the file
+     * @return the string
+     */
+    @RequestMapping(value="/api/energy2", method=RequestMethod.POST)
+    @ResponseBody
+    public String importEnergyDataNonBlocking(final MultipartFile file){
     	// http://stackoverflow.com/questions/28908229/how-to-implement-an-asynchronous-rest-request-to-a-controller-using-springboot
     	
     	// https://www.youtube.com/watch?v=106WWFvgNW0
     	
-		return this.analyticService.importEnergyData(file);
+    	// http://callistaenterprise.se/blogg/teknik/2014/04/22/c10k-developing-non-blocking-rest-services-with-spring-mvc/
+    	
+		return this.analyticService.importEnergyDataNonBlocking(file);
     }
     
 
