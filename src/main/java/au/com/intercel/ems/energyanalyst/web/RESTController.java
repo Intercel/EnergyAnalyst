@@ -30,13 +30,13 @@ public class RESTController {
     /**
      * Gets the energy data.
      *
-     * @param UserId the user id
+     * @param userId the user id
      * @return the energy data
      */
-    @RequestMapping("/api/energy/{name}")
+    @RequestMapping("/api/energy/{id}")
     @ResponseBody
-    public Collection<DailyRecord> getEnergyData(@PathVariable("name") String UserId) {
-    	return this.analyticService.getEnergyData(UserId);
+    public Collection<DailyRecord> getEnergyData(@PathVariable("id") String userId) {
+    	return this.analyticService.getEnergyData(userId);
     }
     
     /**

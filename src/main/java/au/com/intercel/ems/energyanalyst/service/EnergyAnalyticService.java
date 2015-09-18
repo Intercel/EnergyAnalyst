@@ -44,7 +44,7 @@ public interface EnergyAnalyticService {
 	 * @param UserId the user id
 	 * @return the energy data
 	 */
-	Collection<DailyRecord> getEnergyData(String UserId);
+	Collection<DailyRecord> getEnergyData(String userId);
 
 	
 	
