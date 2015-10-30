@@ -116,7 +116,7 @@ public class EnergyAnalyticServiceImpl implements EnergyAnalyticService {
 			// start the scheduled task now
 			timer.schedule(task, 0);
 			
-			status = file.getOriginalFilename() + "uploaded successfully.";
+			status = file.getOriginalFilename() + " uploaded successfully.";
 		} catch (Exception ex){
 			ex.printStackTrace();
 			status = ex.toString();
